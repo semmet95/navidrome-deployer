@@ -20,5 +20,6 @@ jobs:
     - name: Run E2E tests
       shell: bash
       run: |
+        go version
         mage test:setup
         mage test:cleanup
