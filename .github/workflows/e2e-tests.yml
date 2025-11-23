@@ -8,18 +8,10 @@ on:
 
 jobs:
   e2e-tests:
-    runs-on: ubuntu-latest
+    runs-on: semmet/ga-go:1.241
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Install k3d
-      run: make install-k3d-cli
-
-    - name: Setup test CNPG
-      env:
-        APP_USER_PASSWORD: ${{ secrets.APP_USER_PASSWORD }}
-        SUPER_USER_PASSWORD: ${{ secrets.SUPER_USER_PASSWORD }}
-      run: make local-pg-setup
-
-    - name: Run acceptance tests
-      run: make acceptance-tests
+    - name: Run E2E tests
+      shell: bash
+      run: |
+        mage test:setup
+        mage test:cleanup
