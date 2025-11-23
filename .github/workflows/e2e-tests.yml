@@ -14,12 +14,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Setup Go
+      uses: actions/setup-go@v6
+      with:
+        go-version-file: 'go.mod'
     - name: Set up test environment
       shell: bash
       run: scripts/setup.sh
     - name: Run E2E tests
       shell: bash
       run: |
-        go version
         mage test:setup
         mage test:cleanup
