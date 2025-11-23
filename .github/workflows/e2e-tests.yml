@@ -1,0 +1,25 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install k3d
+      run: make install-k3d-cli
+
+    - name: Setup test CNPG
+      env:
+        APP_USER_PASSWORD: ${{ secrets.APP_USER_PASSWORD }}
+        SUPER_USER_PASSWORD: ${{ secrets.SUPER_USER_PASSWORD }}
+      run: make local-pg-setup
+
+    - name: Run acceptance tests
+      run: make acceptance-tests
