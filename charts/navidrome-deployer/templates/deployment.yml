@@ -3,35 +3,37 @@ kind: Deployment
 metadata:
   name: navidrome
   labels:
-    app.kubernetes.io/name: navidrome
+    {{- include "commonLabels" . | nindent 4 }}
+    {{- include "appLabels" . | nindent 4 }}
 spec:
-  replicas: 2
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: navidrome
+      {{- include "commonLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: navidrome
+        {{- include "commonLabels" . | nindent 8 }}
     spec:
       containers:
       - name: navidrome
-        image: deluan/navidrome:latest
+        image: {{ .Values.image.repo }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
-        - containerPort: 4533
+        - containerPort: {{ .Values.containerPort }}
         readinessProbe:
           httpGet:
             path: /
-            port: 4533
+            port: {{ .Values.containerPort }}
           initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 3
           failureThreshold: 3
         resources:
           requests:
-            cpu: "100m"
+            cpu: {{ .Values.resources.requests.cpu }}
           limits:
-            memory: "400Mi"
+            memory: {{ .Values.resources.limits.memory }}
         volumeMounts:
         - name: data-volume
           mountPath: /data
