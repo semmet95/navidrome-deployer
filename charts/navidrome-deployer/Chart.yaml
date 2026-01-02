@@ -1,5 +1,10 @@
-type: application
+apiVersion: v2
 name: navidrome-deployer
 description: A Helm chart for deploying Navidrome music server
 version: 0.5.0
 appVersion: "0.5.0"
+
+dependencies:
+  - name: longhorn
+    version: 1.10.1
+    repository: https://charts.longhorn.io

@@ -22,7 +22,8 @@ const (
 	releaseNamespace = "default"
 
 	// app config
-	appName = "navidrome"
+	appName                = "navidrome"
+	defaultLonghornVersion = "v1.10.1"
 )
 
 var (

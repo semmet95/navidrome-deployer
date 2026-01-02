@@ -18,6 +18,7 @@ type Chart struct {
 
 func InstallHelmChartLocal(ctx context.Context, t *testing.T, chart Chart) error {
 	options := &helm.Options{
+		BuildDependencies: true,
 		KubectlOptions: k8s.NewKubectlOptions("", "", chart.Namespace),
 		SetValues:      chart.ReleaseValues,
 	}
