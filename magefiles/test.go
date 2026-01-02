@@ -29,7 +29,8 @@ const (
 	releaseNamespace = "default"
 
 	// app config
-	appName = "navidrome"
+	appName                = "navidrome"
+	defaultLonghornVersion = "v1.10.1"
 )
 
 var (
@@ -53,6 +54,25 @@ func (Test) Setup() {
 	if err != nil {
 		panic(err)
 	}
+
+	// install longhorn on the cluster
+	// longhornVersion := defaultLonghornVersion
+	// if version, ok := os.LookupEnv("LONGHORN_VERSION"); ok {
+	// 	longhornVersion = version
+	// }
+	// err = k8s.KubectlApplyE(
+	// 	&testing.T{},
+	// 	&k8s.KubectlOptions{
+	// 		ConfigPath: kubeConfigPath,
+	// 	},
+	// 	fmt.Sprintf(
+	// 		"https://raw.githubusercontent.com/longhorn/longhorn/%s/deploy/longhorn.yaml",
+	// 		longhornVersion,
+	// 	),
+	// )
+	// if err != nil {
+	// 	panic(err)
+	// }
 }
 
 func (Test) DeployApp() {
