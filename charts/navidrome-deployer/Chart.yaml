@@ -1,0 +1,5 @@
+type: application
+name: navidrome-deployer
+description: A Helm chart for deploying Navidrome music server
+version: 0.1.0
+appVersion: "0.1.0"

@@ -6,92 +6,90 @@ package main
 import (
 	"context"
 	"fmt"
+	"navidrome-deployer/test/util"
+	"os"
+	"path/filepath"
+	"testing"
+	"time"
 
+	"github.com/gruntwork-io/terratest/modules/k8s"
 	"github.com/magefile/mage/mg"
-	"github.com/magefile/mage/sh"
 )
 
 type Test mg.Namespace
 
 const (
+	// cluster config
 	agentCount     = "1"
-	appName        = "navidrome"
 	defaultCluster = "test-env"
 	serverCount    = "1"
+
+	// helm config
+	releaseName      = "navidrome-deployer"
+	releaseNamespace = "default"
+
+	// app config
+	appName = "navidrome"
+)
+
+var (
+	kubeConfigPath string
 )
 
 func (Test) Setup() {
-	createCluster(context.TODO(), defaultCluster)
+	cluster := util.K3DCluster{
+		AgentCount:  agentCount,
+		Name:        defaultCluster,
+		ServerCount: serverCount,
+	}
+	output, err := util.CreateCluster(context.TODO(), &testing.T{}, cluster)
+	if err != nil {
+		fmt.Println(output)
+		panic(err)
+	}
+
+	kubeConfigPath = output
+	err = os.Setenv("KUBECONFIG", kubeConfigPath)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func (Test) DeployApp() {
 	mg.Deps(Test.Setup)
-	applyManifest(context.TODO(), "app.yml")
-	verifyDeploymentHealth(context.TODO(), appName, "default")
+
+	chartPath, err := filepath.Abs("charts/navidrome-deployer")
+	if err != nil {
+		panic(err)
+	}
+
+	localChart := util.Chart{
+		ReleaseName: releaseName,
+		LocalPath:   chartPath,
+		Namespace:   releaseNamespace,
+	}
+	err = util.InstallHelmChartLocal(context.TODO(), &testing.T{}, localChart)
+	if err != nil {
+		panic(err)
+	}
+
+	err = k8s.WaitUntilDeploymentAvailableE(
+		&testing.T{},
+		&k8s.KubectlOptions{
+			ConfigPath: kubeConfigPath,
+			Namespace:  "default",
+		},
+		appName,
+		8,
+		15*time.Second,
+	)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func (Test) Cleanup() {
-	deleteCluster(context.TODO(), defaultCluster)
-}
-
-func createCluster(ctx context.Context, name string) {
-	output, err := sh.Output(
-		"k3d",
-		"cluster",
-		"create",
-		name,
-		"--agents",
-		agentCount,
-		"--servers",
-		serverCount,
-	)
-
-	fmt.Println(output)
-	if err != nil {
-		panic(err)
-	}
-}
-
-func deleteCluster(ctx context.Context, name string) {
-	output, err := sh.Output(
-		"k3d",
-		"cluster",
-		"delete",
-		name,
-	)
-
-	fmt.Println(output)
-	if err != nil {
-		panic(err)
-	}
-}
-
-func applyManifest(ctx context.Context, filePath string) {
-	output, err := sh.Output(
-		"kubectl",
-		"apply",
-		"-f",
-		filePath,
-	)
-
-	fmt.Println(output)
-	if err != nil {
-		panic(err)
-	}
-}
-
-func verifyDeploymentHealth(ctx context.Context, deployName, namespace string) {
-	output, err := sh.Output(
-		"kubectl",
-		"wait",
-		"deployment",
-		deployName,
-		"-n",
-		namespace,
-		"--for=condition=Available",
-		"--timeout=120s",
-	)
-
+	output, err := util.DeleteCluster(context.TODO(), &testing.T{}, defaultCluster)
 	fmt.Println(output)
 	if err != nil {
 		panic(err)
