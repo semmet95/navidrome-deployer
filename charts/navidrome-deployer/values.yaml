@@ -1,0 +1,23 @@
+# Application settings
+replicaCount: 2
+image:
+  repo: "deluan/navidrome"
+  tag: "0.58.5"
+  pullPolicy: IfNotPresent
+containerPort: 4533
+resources:
+  limits:
+    memory: 400Mi
+  requests:
+    cpu: 100m
+
+# Service configuration
+service:
+  type: LoadBalancer
+  port: 80
+
+# Labels
+labels:
+  app.kubernetes.io/name: my-app
+  app.kubernetes.io/component: backend
+  environment: production
