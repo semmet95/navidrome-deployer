@@ -26,5 +26,10 @@ jobs:
     - name: Run E2E tests
       shell: bash
       run: |
+        set -ex
         mage test:deployApp
+    - name: Cleanup
+      shell: bash
+      run: |
+        set -ex
         mage test:cleanup
