@@ -21,3 +21,6 @@ labels:
   app.kubernetes.io/name: my-app
   app.kubernetes.io/component: backend
   environment: production
+
+longhorn:
+  namespaceOverride: longhorn-system

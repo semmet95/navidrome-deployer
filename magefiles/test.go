@@ -18,8 +18,10 @@ type Test mg.Namespace
 
 const (
 	// helm config
-	releaseName      = "navidrome-deployer"
-	releaseNamespace = "default"
+	longhorChartRepoName = "longhorn"
+	longhorChartRepoUrl  = "https://charts.longhorn.io"
+	releaseName          = "navidrome-deployer"
+	releaseNamespace     = "default"
 
 	// app config
 	appName                = "navidrome"
@@ -32,6 +34,11 @@ var (
 
 func (Test) DeployApp() {
 	chartPath, err := filepath.Abs("charts/navidrome-deployer")
+	if err != nil {
+		panic(err)
+	}
+
+	err = util.AddHelmRepo(context.TODO(), &testing.T{}, longhorChartRepoName, longhorChartRepoUrl)
 	if err != nil {
 		panic(err)
 	}
