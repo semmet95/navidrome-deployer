@@ -26,6 +26,12 @@ func InstallHelmChartLocal(ctx context.Context, t *testing.T, chart Chart) error
 	return helm.InstallE(t, options, chart.LocalPath, chart.ReleaseName)
 }
 
+// func VerifyDaemonSet(
+// 	ctx context.Context, t *testing.T, opts *k8s.KubectlOptions, name string, retryCount int, waitDuration time.Duration) error {
+// 	ds := k8s.GetDaemonSet(t, opts, "test")
+// 	ds.Status.DesiredNumberScheduled
+// }
+
 func VerifyDeployment(
 	ctx context.Context, t *testing.T, opts *k8s.KubectlOptions, name string, retryCount int, waitDuration time.Duration) error {
 	return k8s.WaitUntilDeploymentAvailableE(
