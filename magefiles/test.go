@@ -20,6 +20,7 @@ const (
 	// helm config
 	longhorChartRepoName = "longhorn"
 	longhorChartRepoUrl  = "https://charts.longhorn.io"
+	longhornNamespace    = "longhorn-system"
 	releaseName          = "navidrome-deployer"
 	releaseNamespace     = "default"
 
@@ -30,6 +31,21 @@ const (
 
 var (
 	kubeConfigPath string
+
+	allDeployments = [3]util.K8SResource{
+		{
+			Name:      appName,
+			Namespace: "default",
+		},
+		{
+			Name:      "longhorn-driver-deployer",
+			Namespace: longhornNamespace,
+		},
+		{
+			Name:      "longhorn-ui",
+			Namespace: longhornNamespace,
+		},
+	}
 )
 
 func (Test) DeployApp() {
@@ -53,17 +69,19 @@ func (Test) DeployApp() {
 		panic(err)
 	}
 
-	err = k8s.WaitUntilDeploymentAvailableE(
-		&testing.T{},
-		&k8s.KubectlOptions{
-			ConfigPath: kubeConfigPath,
-			Namespace:  "default",
-		},
-		appName,
-		8,
-		15*time.Second,
-	)
-	if err != nil {
-		panic(err)
+	for _, deploy := range allDeployments {
+		err = k8s.WaitUntilDeploymentAvailableE(
+			&testing.T{},
+			&k8s.KubectlOptions{
+				ConfigPath: kubeConfigPath,
+				Namespace:  deploy.Namespace,
+			},
+			deploy.Name,
+			8,
+			15*time.Second,
+		)
+		if err != nil {
+			panic(err)
+		}
 	}
 }
