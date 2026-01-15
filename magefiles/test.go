@@ -5,6 +5,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"navidrome-deployer/test/util"
 	"path/filepath"
 	"testing"
@@ -70,17 +71,29 @@ func (Test) DeployApp() {
 	}
 
 	for _, deploy := range allDeployments {
+		opts := &k8s.KubectlOptions{
+			ConfigPath: kubeConfigPath,
+			Namespace:  deploy.Namespace,
+		}
 		err = k8s.WaitUntilDeploymentAvailableE(
 			&testing.T{},
-			&k8s.KubectlOptions{
-				ConfigPath: kubeConfigPath,
-				Namespace:  deploy.Namespace,
-			},
+			opts,
 			deploy.Name,
 			8,
 			15*time.Second,
 		)
 		if err != nil {
+			logs, logErr := util.GetAppLogs(
+				context.TODO(),
+				&testing.T{},
+				opts,
+				deploy.Name,
+			)
+			if logErr != nil {
+				fmt.Println("error while retriving %s app logs: %v", deploy.Name, logErr)
+			} else {
+				fmt.Println(logs)
+			}
 			panic(err)
 		}
 	}
