@@ -8,6 +8,7 @@ on:
 
 env:
   GO_VERSION: 1.24
+  KUBECONFIG: '/etc/rancher/k3s/k3s.yaml'
 
 jobs:
   e2e-tests:
@@ -22,7 +23,7 @@ jobs:
         go-version-file: 'go.mod'
     - name: Set up test environment
       shell: bash
-      run: scripts/setup.sh
+      run: sudo scripts/setup.sh
     - name: Run E2E tests
       shell: bash
       run: |

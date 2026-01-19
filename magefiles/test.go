@@ -7,7 +7,6 @@ import (
 	"context"
 	"fmt"
 	"navidrome-deployer/test/util"
-	"os"
 	"path/filepath"
 	"testing"
 	"time"
@@ -36,28 +35,7 @@ var (
 	kubeConfigPath string
 )
 
-func (Test) Setup() {
-	cluster := util.K3DCluster{
-		AgentCount:  agentCount,
-		Name:        defaultCluster,
-		ServerCount: serverCount,
-	}
-	output, err := util.CreateCluster(context.TODO(), &testing.T{}, cluster)
-	if err != nil {
-		fmt.Println(output)
-		panic(err)
-	}
-
-	kubeConfigPath = output
-	err = os.Setenv("KUBECONFIG", kubeConfigPath)
-	if err != nil {
-		panic(err)
-	}
-}
-
 func (Test) DeployApp() {
-	mg.Deps(Test.Setup)
-
 	chartPath, err := filepath.Abs("charts/navidrome-deployer")
 	if err != nil {
 		panic(err)
