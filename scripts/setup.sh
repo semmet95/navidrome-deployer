@@ -1,14 +1,9 @@
 #!/bin/bash
 set -ex
 
-# kubectl installation
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-chmod +x ./kubectl
-mv -f ./kubectl /usr/local/bin/kubectl
-
 # K3S setup
-curl -sfL https://get.k3s.io | sh -s - --token 12345
-chmod 644 /etc/rancher/k3s/k3s.yaml
+sudo curl -sfL https://get.k3s.io | sh -s - --token 12345
+sudo chmod 644 /etc/rancher/k3s/k3s.yaml
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 kubectl create ns longhorn-system
 

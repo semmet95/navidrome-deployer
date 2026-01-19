@@ -23,14 +23,9 @@ jobs:
         go-version-file: 'go.mod'
     - name: Set up test environment
       shell: bash
-      run: sudo scripts/setup.sh
+      run: scripts/setup.sh
     - name: Run E2E tests
       shell: bash
       run: |
         set -ex
         mage test:deployApp
-    - name: Cleanup
-      shell: bash
-      run: |
-        set -ex
-        mage test:cleanup

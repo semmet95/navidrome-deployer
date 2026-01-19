@@ -5,7 +5,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"navidrome-deployer/test/util"
 	"path/filepath"
 	"testing"
@@ -18,11 +17,6 @@ import (
 type Test mg.Namespace
 
 const (
-	// cluster config
-	agentCount     = "1"
-	defaultCluster = "test-env"
-	serverCount    = "1"
-
 	// helm config
 	releaseName      = "navidrome-deployer"
 	releaseNamespace = "default"
@@ -61,14 +55,6 @@ func (Test) DeployApp() {
 		8,
 		15*time.Second,
 	)
-	if err != nil {
-		panic(err)
-	}
-}
-
-func (Test) Cleanup() {
-	output, err := util.DeleteCluster(context.TODO(), &testing.T{}, defaultCluster)
-	fmt.Println(output)
 	if err != nil {
 		panic(err)
 	}
