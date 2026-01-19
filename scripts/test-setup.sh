@@ -5,9 +5,9 @@ set -ex
 sudo curl -sfL https://get.k3s.io | sh -s - --token 12345
 sudo chmod 644 /etc/rancher/k3s/k3s.yaml
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-kubectl create ns longhorn-system
 
 # Longhorn setup
+kubectl create ns longhorn-system
 rm -rf /usr/local/bin/longhornctl
 curl -L https://github.com/longhorn/cli/releases/download/v1.10.1/longhornctl-linux-amd64 -o longhornctl
 chmod +x longhornctl
@@ -17,3 +17,7 @@ longhornctl check preflight
 
 # install mage
 go install github.com/magefile/mage@latest
+
+# pull all chart dependencies
+helm repo add longhorn https://charts.longhorn.io
+helm repo update
