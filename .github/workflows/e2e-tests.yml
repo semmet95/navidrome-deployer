@@ -8,6 +8,7 @@ on:
 
 env:
   GO_VERSION: 1.24
+  KUBECONFIG: '/etc/rancher/k3s/k3s.yaml'
 
 jobs:
   e2e-tests:
@@ -28,8 +29,3 @@ jobs:
       run: |
         set -ex
         mage test:deployApp
-    - name: Cleanup
-      shell: bash
-      run: |
-        set -ex
-        mage test:cleanup
