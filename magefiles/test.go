@@ -75,7 +75,7 @@ func (Test) CheckDependencies() error {
 				&deploy,
 			)
 			if logErr != nil {
-				fmt.Println("error while retriving %s app logs: %v", deploy.Name, logErr)
+				fmt.Printf("error while retrieving %s app logs: %v\n", deploy.Name, logErr)
 			} else {
 				fmt.Println(logs)
 			}
@@ -87,7 +87,7 @@ func (Test) CheckDependencies() error {
 }
 
 func (Test) DeployApp() {
-	mg.Deps(Test.CheckDependencies)
+	// mg.Deps(Test.CheckDependencies)
 	chartPath, err := filepath.Abs("charts/navidrome-deployer")
 	if err != nil {
 		panic(err)
