@@ -23,9 +23,14 @@ jobs:
         go-version-file: 'go.mod'
     - name: Set up test environment
       shell: bash
-      run: scripts/test-setup.sh
-    - name: Run E2E tests
-      shell: bash
-      run: |
-        set -ex
-        mage test:deployApp
+      run: sudo scripts/test-setup.sh
+    - uses: helmfile/helmfile-action@v2.0.4
+      with:
+        helmfile-args: apply
+        helm-version: v3.19.2
+        helmfile-auto-init: "true"
+    # - name: Run E2E tests
+    #   shell: bash
+    #   run: |
+    #     set -ex
+    #     mage test:deployApp

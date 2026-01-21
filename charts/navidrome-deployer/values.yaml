@@ -1,5 +1,5 @@
 # Application settings
-replicaCount: 2
+replicaCount: 1
 image:
   repo: "deluan/navidrome"
   tag: "0.58.5"

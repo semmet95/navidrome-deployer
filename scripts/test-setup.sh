@@ -2,7 +2,17 @@
 set -ex
 
 # K3S setup
-sudo curl -sfL https://get.k3s.io | sh -s - --token 12345
+
+if [ -f /etc/redhat-release ]; then
+    sudo dnf install -y kernel-modules-extra
+    systemctl disable firewalld --now
+elif [ -f /etc/debian_version ]; then
+    ufw disable
+else
+    echo "Host OS not supported"
+    exit 1
+fi
+sudo curl -sfL https://get.k3s.io | sh -s -
 sudo chmod 644 /etc/rancher/k3s/k3s.yaml
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 
@@ -19,12 +29,8 @@ kubectl delete ns longhorn-system
 # install mage
 go install github.com/magefile/mage@latest
 
-# chart dependencies
-# helm repo add longhorn https://charts.longhorn.io --force-update
-# helm repo update
-
-if ! helm plugin list | grep -q "^diff[[:space:]]"; then
-    helm plugin install "https://github.com/databus23/helm-diff" --verify=false
-fi
-# helmfile init
-helmfile apply -f helmfile.yml
+# helmfile setup
+# if ! helm plugin list | grep -q "^diff[[:space:]]"; then
+#     helm plugin install "https://github.com/databus23/helm-diff" --verify=false || helm plugin install "https://github.com/databus23/helm-diff"
+# fi
+# helmfile apply -f helmfile.yaml
