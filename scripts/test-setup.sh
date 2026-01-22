@@ -2,7 +2,6 @@
 set -ex
 
 # K3S setup
-
 if [ -f /etc/redhat-release ]; then
     sudo dnf install -y kernel-modules-extra
     systemctl disable firewalld --now
@@ -28,9 +27,3 @@ kubectl delete ns longhorn-system
 
 # install mage
 go install github.com/magefile/mage@latest
-
-# helmfile setup
-# if ! helm plugin list | grep -q "^diff[[:space:]]"; then
-#     helm plugin install "https://github.com/databus23/helm-diff" --verify=false || helm plugin install "https://github.com/databus23/helm-diff"
-# fi
-# helmfile apply -f helmfile.yaml
