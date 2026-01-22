@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"navidrome-deployer/test/util"
 	"os"
-	"path/filepath"
 	"testing"
 	"time"
 
@@ -26,8 +25,7 @@ const (
 	releaseNamespace  = "default"
 
 	// app config
-	appName                = "navidrome"
-	defaultLonghornVersion = "v1.10.1"
+	navidromeNamespace = "navidrome-system"
 )
 
 var (
@@ -42,7 +40,7 @@ func init() {
 	kubeConfigPath = configPath
 }
 
-func (Test) CheckDependencies() error {
+func (Test) CheckDeployments() error {
 	longhornDeployments, err := k8s.ListDeploymentsE(
 		&testing.T{},
 		&k8s.KubectlOptions{
@@ -52,10 +50,22 @@ func (Test) CheckDependencies() error {
 		v1.ListOptions{},
 	)
 	if err != nil {
-		return err
+		panic(err)
 	}
 
-	for _, deploy := range longhornDeployments {
+	navidromeDeployments, err := k8s.ListDeploymentsE(
+		&testing.T{},
+		&k8s.KubectlOptions{
+			ConfigPath: kubeConfigPath,
+			Namespace:  navidromeNamespace,
+		},
+		v1.ListOptions{},
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, deploy := range append(longhornDeployments, navidromeDeployments...) {
 		opts := &k8s.KubectlOptions{
 			ConfigPath: kubeConfigPath,
 			Namespace:  deploy.Namespace,
@@ -87,34 +97,5 @@ func (Test) CheckDependencies() error {
 }
 
 func (Test) DeployApp() {
-	// mg.Deps(Test.CheckDependencies)
-	chartPath, err := filepath.Abs("charts/navidrome-deployer")
-	if err != nil {
-		panic(err)
-	}
-
-	localChart := util.Chart{
-		ReleaseName: releaseName,
-		LocalPath:   chartPath,
-		Namespace:   releaseNamespace,
-	}
-	err = util.InstallHelmChartLocal(context.TODO(), &testing.T{}, localChart)
-	if err != nil {
-		panic(err)
-	}
-
-	opts := &k8s.KubectlOptions{
-		ConfigPath: kubeConfigPath,
-		Namespace:  releaseNamespace,
-	}
-	err = k8s.WaitUntilDeploymentAvailableE(
-		&testing.T{},
-		opts,
-		appName,
-		8,
-		30*time.Second,
-	)
-	if err != nil {
-		panic(err)
-	}
+	mg.Deps(Test.CheckDeployments)
 }

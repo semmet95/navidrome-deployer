@@ -23,14 +23,18 @@ jobs:
         go-version-file: 'go.mod'
     - name: Set up test environment
       shell: bash
-      run: sudo scripts/test-setup.sh
+      run: |
+        scripts/test-setup.sh
+    - name: Longhorn Preflight Checks
+      shell: bash
+      run: |
+        scripts/longhorn-preflight.sh
     - uses: helmfile/helmfile-action@v2.0.4
       with:
         helmfile-args: apply
         helm-version: v3.19.2
-        helmfile-auto-init: "true"
-    # - name: Run E2E tests
-    #   shell: bash
-    #   run: |
-    #     set -ex
-    #     mage test:deployApp
+    - name: Run Mage E2E Tests
+      uses: magefile/mage-action@v3
+      with:
+        version: latest
+        args: test:deployApp
