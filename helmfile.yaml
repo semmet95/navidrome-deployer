@@ -1,6 +1,9 @@
 repositories:
 - name: longhorn
   url: https://charts.longhorn.io
+- name: navidrome
+  url: ghcr.io/semmet95/navidrome-deployer/charts
+  oci: true
 
 releases:
 - name: longhorn
@@ -10,7 +13,8 @@ releases:
   createNamespace: true
 - name: navidrome
   namespace: navidrome-system
-  chart: charts/navidrome-deployer
+  chart: navidrome-deployer
+  version: 0.7.0
   createNamespace: true
   needs:
   - longhorn-system/longhorn
