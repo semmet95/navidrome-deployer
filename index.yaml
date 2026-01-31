@@ -1,6 +1,15 @@
 apiVersion: v1
 entries:
   navidrome-deployer:
+  - apiVersion: v2
+    appVersion: 0.7.0
+    created: "2026-01-31T10:02:55.564449417Z"
+    description: A Helm chart for deploying Navidrome music server
+    digest: 71ea5450fe68e9dbdd859e9fc0b8cea92e7c42ed8f848cb7ae0fe1260233fe13
+    name: navidrome-deployer
+    urls:
+    - https://github.com/semmet95/navidrome-deployer/releases/download/navidrome-deployer-0.7.0/navidrome-deployer-0.7.0.tgz
+    version: 0.7.0
   - apiVersion: v1
     appVersion: 0.5.0
     created: "2026-01-04T16:23:00.583448951Z"
@@ -91,4 +100,4 @@ entries:
     urls:
     - https://github.com/semmet95/navidrome-deployer/releases/download/navidrome-deployer-0.3.0/navidrome-deployer-0.3.0.tgz
     version: 0.3.0
-generated: "2026-01-04T16:23:00.58349671Z"
+generated: "2026-01-31T10:02:55.564496077Z"
