@@ -13,7 +13,7 @@ releases:
   createNamespace: true
 - name: navidrome
   namespace: navidrome-system
-  chart: navidrome-deployer
+  chart: navidrome/navidrome-deployer
   version: 0.7.0
   createNamespace: true
   needs:
