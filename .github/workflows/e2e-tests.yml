@@ -33,6 +33,7 @@ jobs:
       with:
         helmfile-args: apply
         helm-version: v3.19.2
+        helmfile-workdirectory: test
     - name: Run Mage E2E Tests
       uses: magefile/mage-action@v3
       with:
