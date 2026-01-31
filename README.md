@@ -13,7 +13,18 @@ Before deploying `navidrome-deployer`, ensure the following tools are installed:
 - [helm](https://helm.sh/docs/intro/install/) - Kubernetes package manager
 - [helmfile](https://github.com/roboll/helmfile#installation) - Helm values file manager
 
-## Local Deployment
+## Installation on a cluster
+To install the latest release
+```bash
+helmfile apply -f https://github.com/semmet95/navidrome-deployer/releases/latest/download/helmfile.yaml
+```
+
+To install a specific version
+```bash
+helmfile apply -f https://github.com/semmet95/navidrome-deployer/releases/download/<version>/helmfile.yaml
+```
+
+## Local Setup and Deployment
 
 To deploy navidrome-deployer locally, execute the following command:
 
