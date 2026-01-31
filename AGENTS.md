@@ -12,7 +12,7 @@ When reviewing PRs for the main branch, ensure:
 
 ## Key Practices for Main Branch PRs
 
-### 1. Helm Chart Version Management
+### 1. Helm Chart Version and Dependency Management
 
 **Requirement:** Whenever the `navidrome-deployer` Helm chart is updated, the chart version **must** be incremented.
 
@@ -21,6 +21,8 @@ When reviewing PRs for the main branch, ensure:
 - Verify that `charts/navidrome-deployer/Chart.yml` has an updated version field
 - Use semantic versioning: increment patch version for bug fixes, minor for new features, major for breaking changes
 - Flag if chart changes are present but version remains unchanged
+- `test/helmfile.yaml` and `helmfile.yaml` should have identical dependencies
+- `navidrome` chart version in `helmfile.yaml` should be the latest or next release version of `navidrome-deployer` 
 
 ### 2. E2E Test Coverage for Features and Deployments
 

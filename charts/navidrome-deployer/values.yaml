@@ -1,5 +1,5 @@
 # Application settings
-replicaCount: 2
+replicaCount: 1
 image:
   repo: "deluan/navidrome"
   tag: "0.58.5"
@@ -20,4 +20,4 @@ service:
 labels:
   app.kubernetes.io/name: my-app
   app.kubernetes.io/component: backend
-  environment: production
+  environment: dev

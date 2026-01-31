@@ -41,6 +41,8 @@ spec:
           mountPath: /music
       volumes:
       - name: data-volume
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: data-volume
       - name: music-volume
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: music-volume

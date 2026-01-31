@@ -7,3 +7,6 @@ charts/navidrome-deployer/charts/
 
 # binaries
 longhornctl
+
+# temp files
+temp/

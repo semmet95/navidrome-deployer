@@ -5,57 +5,97 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"navidrome-deployer/test/util"
-	"path/filepath"
+	"os"
 	"testing"
 	"time"
 
 	"github.com/gruntwork-io/terratest/modules/k8s"
 	"github.com/magefile/mage/mg"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 type Test mg.Namespace
 
 const (
 	// helm config
-	releaseName      = "navidrome-deployer"
-	releaseNamespace = "default"
+	longhornNamespace = "longhorn-system"
+	releaseName       = "navidrome-deployer"
+	releaseNamespace  = "default"
 
 	// app config
-	appName = "navidrome"
+	navidromeNamespace = "navidrome-system"
 )
 
 var (
 	kubeConfigPath string
 )
 
-func (Test) DeployApp() {
-	chartPath, err := filepath.Abs("charts/navidrome-deployer")
-	if err != nil {
-		panic(err)
+func init() {
+	configPath, ok := os.LookupEnv("KUBECONFIG")
+	if !ok {
+		panic("KUBECONFIG environment variable is not set")
 	}
+	kubeConfigPath = configPath
+}
 
-	localChart := util.Chart{
-		ReleaseName: releaseName,
-		LocalPath:   chartPath,
-		Namespace:   releaseNamespace,
-	}
-	err = util.InstallHelmChartLocal(context.TODO(), &testing.T{}, localChart)
-	if err != nil {
-		panic(err)
-	}
-
-	err = k8s.WaitUntilDeploymentAvailableE(
+func (Test) CheckDeployments() error {
+	longhornDeployments, err := k8s.ListDeploymentsE(
 		&testing.T{},
 		&k8s.KubectlOptions{
 			ConfigPath: kubeConfigPath,
-			Namespace:  "default",
+			Namespace:  longhornNamespace,
 		},
-		appName,
-		8,
-		15*time.Second,
+		v1.ListOptions{},
 	)
 	if err != nil {
 		panic(err)
 	}
+
+	navidromeDeployments, err := k8s.ListDeploymentsE(
+		&testing.T{},
+		&k8s.KubectlOptions{
+			ConfigPath: kubeConfigPath,
+			Namespace:  navidromeNamespace,
+		},
+		v1.ListOptions{},
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, deploy := range append(longhornDeployments, navidromeDeployments...) {
+		opts := &k8s.KubectlOptions{
+			ConfigPath: kubeConfigPath,
+			Namespace:  deploy.Namespace,
+		}
+		err = k8s.WaitUntilDeploymentAvailableE(
+			&testing.T{},
+			opts,
+			deploy.Name,
+			8,
+			30*time.Second,
+		)
+		if err != nil {
+			logs, logErr := util.GetDeploymentLogs(
+				context.TODO(),
+				&testing.T{},
+				opts,
+				&deploy,
+			)
+			if logErr != nil {
+				fmt.Printf("error while retrieving %s app logs: %v\n", deploy.Name, logErr)
+			} else {
+				fmt.Println(logs)
+			}
+			panic(err)
+		}
+	}
+
+	return nil
+}
+
+func (Test) DeployApp() {
+	mg.Deps(Test.CheckDeployments)
 }
