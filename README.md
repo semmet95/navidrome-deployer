@@ -7,7 +7,7 @@
 Before deploying `navidrome-deployer`, ensure the following tools are installed:
 
 - [kubectl](https://kubernetes.io/docs/tasks/tools/) - Kubernetes command-line tool
-- [longhornctl](https://longhorn.io/docs/latest/deploy/install/install-with-script/) - Longhorn command-line tool
+- [longhornctl](https://longhorn.io/docs/latest/advanced-resources/longhornctl/install-longhornctl/) - Longhorn command-line tool
 - [go](https://golang.org/doc/install) - Go programming language
 - [mage](https://magefile.org/) - Go-based task runner
 - [helm](https://helm.sh/docs/intro/install/) - Kubernetes package manager
