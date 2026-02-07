@@ -34,6 +34,12 @@ jobs:
         helmfile-args: apply
         helm-version: v3.19.2
         helmfile-workdirectory: test
+    - name: Check all pods
+      shell: bash
+      run: |
+        sleep 600
+        kubectl get po -A -o wide
+        kubectl describe pod -l app.kubernetes.io/name=navidrome-deployer -n navidrome-system
     - name: Run Mage E2E Tests
       uses: magefile/mage-action@v3
       with:
