@@ -74,7 +74,7 @@ func (Test) CheckDeployments() error {
 			&testing.T{},
 			opts,
 			deploy.Name,
-			8,
+			12,
 			30*time.Second,
 		)
 		if err != nil {
