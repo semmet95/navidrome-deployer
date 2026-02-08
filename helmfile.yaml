@@ -14,7 +14,7 @@ releases:
 - name: navidrome
   namespace: navidrome-system
   chart: navidrome/navidrome-deployer
-  version: 0.7.0
+  version: 0.8.0
   createNamespace: true
   needs:
   - longhorn-system/longhorn
