@@ -25,11 +25,6 @@ jobs:
     - uses: actions/setup-go@v6
       with:
         go-version-file: 'go.mod'
-    - name: Set up test environment
-      shell: bash
-      run: |
-        sudo /usr/local/bin/k3s-uninstall.sh || true
-        scripts/test-setup.sh
     - name: Cache Go modules
       uses: actions/cache@v4
       with:
@@ -38,6 +33,10 @@ jobs:
           ~/.cache/go-build
         key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
         restore-keys: ${{ runner.os }}-go-
+    - name: Set up test environment
+      shell: bash
+      run: |
+        scripts/test-setup.sh
     - name: Longhorn Preflight Checks
       shell: bash
       run: |
