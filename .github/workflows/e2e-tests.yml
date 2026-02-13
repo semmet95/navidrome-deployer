@@ -7,6 +7,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   GO_VERSION: 1.24
   KUBECONFIG: '/etc/rancher/k3s/k3s.yaml'
@@ -24,7 +28,16 @@ jobs:
     - name: Set up test environment
       shell: bash
       run: |
+        sudo /usr/local/bin/k3s-uninstall.sh || true
         scripts/test-setup.sh
+    - name: Cache Go modules
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/go/pkg/mod
+          ~/.cache/go-build
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: ${{ runner.os }}-go-
     - name: Longhorn Preflight Checks
       shell: bash
       run: |
@@ -39,3 +52,9 @@ jobs:
       with:
         version: latest
         args: test:deployApp
+    - name: Cleanup Docker
+      if: always()
+      run: |
+        docker ps -aq | xargs -r docker rm -f
+        docker image prune -af
+        docker volume prune -f
