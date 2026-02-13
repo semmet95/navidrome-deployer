@@ -2,6 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: music-volume
+  namespace: {{ .Values.namespace }}
   labels:
     {{- include "commonLabels" . | nindent 4 }}
     {{- include "appLabels" . | nindent 4 }}

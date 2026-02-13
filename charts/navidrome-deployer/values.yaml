@@ -1,4 +1,5 @@
 # Application settings
+namespace: navidrome-system
 replicaCount: 2
 image:
   repo: "deluan/navidrome"
