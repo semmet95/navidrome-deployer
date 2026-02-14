@@ -25,14 +25,6 @@ jobs:
     - uses: actions/setup-go@v6
       with:
         go-version-file: 'go.mod'
-    - name: Cache Go modules
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/go/pkg/mod
-          ~/.cache/go-build
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: ${{ runner.os }}-go-
     - name: Set up test environment
       shell: bash
       run: |
@@ -51,9 +43,3 @@ jobs:
       with:
         version: latest
         args: test:deployApp
-    - name: Cleanup Docker
-      if: always()
-      run: |
-        docker ps -aq | xargs -r docker rm -f
-        docker image prune -af
-        docker volume prune -f

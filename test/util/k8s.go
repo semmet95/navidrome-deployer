@@ -10,6 +10,7 @@ import (
 	"github.com/gruntwork-io/terratest/modules/helm"
 	"github.com/gruntwork-io/terratest/modules/k8s"
 	v1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -21,11 +22,19 @@ type Chart struct {
 	RepoUrl       string
 }
 
-func GetDeploymentLogs(ctx context.Context, t *testing.T, opts *k8s.KubectlOptions, deployment *v1.Deployment) (string, error) {
+func GetDeploymentPods(ctx context.Context, t *testing.T, opts *k8s.KubectlOptions, deployment *v1.Deployment) ([]corev1.Pod, error) {
 	labelSelector := metav1.FormatLabelSelector(deployment.Spec.Selector)
 	pods, err := k8s.ListPodsE(t, opts, metav1.ListOptions{LabelSelector: labelSelector})
 	if err != nil {
-		return "", fmt.Errorf("error while getting all the pods for deployment %s : %v", deployment.Name, err)
+		return nil, fmt.Errorf("error while getting all the pods for deployment %s : %v", deployment.Name, err)
+	}
+	return pods, nil
+}
+
+func GetDeploymentLogs(ctx context.Context, t *testing.T, opts *k8s.KubectlOptions, deployment *v1.Deployment) (string, error) {
+	pods, err := GetDeploymentPods(ctx, t, opts, deployment)
+	if err != nil {
+		return "", err
 	}
 
 	var allLogs []string
@@ -62,4 +71,12 @@ func VerifyDeployment(
 		retryCount,
 		waitDuration,
 	)
+}
+
+func DescribePod(ctx context.Context, t *testing.T, opts *k8s.KubectlOptions, podName string) (string, error) {
+	output, err := k8s.RunKubectlAndGetOutputE(t, opts, "describe", "pod", podName)
+	if err != nil {
+		return "", fmt.Errorf("failed to describe pod %s: %v", podName, err)
+	}
+	return output, nil
 }
