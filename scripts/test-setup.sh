@@ -15,5 +15,8 @@ else
     exit 1
 fi
 
-sudo curl -sfL https://get.k3s.io | sh -s - server --disable traefik --disable servicelb --disable metrics-server --disable-cloud-controller
+sudo curl -sfL https://get.k3s.io | sh -s - server \
+    --disable-cloud-controller \
+    --disable=servicelb \
+    --etcd-disable-snapshots
 sudo chmod 644 /etc/rancher/k3s/k3s.yaml

@@ -17,6 +17,18 @@ spec:
         {{- include "commonLabels" . | nindent 8 }}
         app: navidrome
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - navidrome
+              topologyKey: kubernetes.io/hostname
       containers:
       - name: navidrome
         image: {{ .Values.image.repo }}:{{ .Values.image.tag }}
