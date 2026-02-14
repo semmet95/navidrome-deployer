@@ -21,6 +21,7 @@ When reviewing PRs for the main branch, ensure:
 - Verify that `charts/navidrome-deployer/Chart.yml` has an updated version field
 - Use semantic versioning: increment patch version for bug fixes, minor for new features, major for breaking changes
 - Flag if chart changes are present but version remains unchanged
+- `appVersion` field in `charts/navidrome-deployer/Chart.yml` should be the same as the Navidrome image tag specified in `charts/navidrome-deployer/values.yaml`
 - `test/helmfile.yaml` and `helmfile.yaml` should have identical dependencies
 - `navidrome` chart version in `helmfile.yaml` should be the latest or next release version of `navidrome-deployer` 
 
@@ -57,6 +58,7 @@ When reviewing PRs for the main branch, ensure:
 ## Review Checklist for Main Branch
 
 - [ ] Chart version updated if `charts/navidrome-deployer/` modified
+- [ ] `appVersion` and Navidrome image tag should be the same
 - [ ] New features/deployments include e2e test coverage
 - [ ] Environment setup uses Mage tasks instead of shell scripts where applicable
 - [ ] Workflow setup is reproducible locally with clear documentation

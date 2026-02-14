@@ -10,4 +10,4 @@ source "$SCRIPT_DIR/longhorn-preflight.sh"
 if ! helm plugin list | grep -q "^diff[[:space:]]"; then
     helm plugin install "https://github.com/databus23/helm-diff" --verify=false
 fi
-helmfile apply -f helmfile.yaml
+helmfile apply -f test/helmfile.yaml

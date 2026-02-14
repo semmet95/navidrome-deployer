@@ -74,10 +74,40 @@ func (Test) CheckDeployments() error {
 			&testing.T{},
 			opts,
 			deploy.Name,
-			8,
+			12,
 			30*time.Second,
 		)
 		if err != nil {
+			fmt.Printf("getting pods for deployment %s in namespace %s\n", &deploy.Name, &deploy.Namespace)
+			pods, err := util.GetDeploymentPods(
+				context.TODO(),
+				&testing.T{},
+				opts,
+				&deploy,
+			)
+			if err != nil {
+				fmt.Println(err)
+			} else {
+				for _, pod := range pods {
+					fmt.Printf("describing pod %s in namespace %s\n", pod.Name, pod.Namespace)
+					description, err := util.DescribePod(
+						context.TODO(),
+						&testing.T{},
+						&k8s.KubectlOptions{
+							ConfigPath: kubeConfigPath,
+							Namespace:  pod.Namespace,
+						},
+						pod.Name,
+					)
+					if err != nil {
+						fmt.Println(err)
+					} else {
+						fmt.Println(description)
+					}
+				}
+			}
+
+			fmt.Printf("getting logs for deployment %s in namespace %s\n", &deploy.Name, &deploy.Namespace)
 			logs, logErr := util.GetDeploymentLogs(
 				context.TODO(),
 				&testing.T{},
