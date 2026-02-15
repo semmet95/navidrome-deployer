@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filebrowser
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "commonLabels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "commonLabels" . | nindent 6 }}
+      app: filebrowser
+  template:
+    metadata:
+      labels:
+        {{- include "commonLabels" . | nindent 8 }}
+        app: filebrowser
+    spec:  
+      containers:
+      - name: filebrowser
+        image: filebrowser/filebrowser:v2
+        ports:
+        - containerPort: {{ .Values.filebrowser.containerPort }}
+        resources:
+          requests:
+            cpu: {{ .Values.filebrowser.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.filebrowser.resources.limits.memory }}
+        volumeMounts:
+        - name: music-volume
+          mountPath: /srv
+      volumes:
+      - name: music-volume
+        persistentVolumeClaim:
+          claimName: music-volume
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: filebrowser
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "commonLabels" . | nindent 4 }}
+spec:
+  ports:
+    - port: {{ .Values.filebrowser.service.port }}
+      targetPort: {{ .Values.filebrowser.containerPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "commonLabels" . | nindent 4 }}
+    app: filebrowser

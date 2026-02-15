@@ -8,6 +8,9 @@ releases:
   chart: longhorn/longhorn
   version: 1.11.0
   createNamespace: true
+  values:
+  - longhornUI:
+      replicas: 0
 - name: navidrome
   namespace: navidrome-system
   chart: ../charts/navidrome-deployer
