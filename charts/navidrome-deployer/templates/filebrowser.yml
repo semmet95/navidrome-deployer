@@ -21,7 +21,7 @@ spec:
       - name: filebrowser
         image: filebrowser/filebrowser:v2
         ports:
-        - containerPort: 80
+        - containerPort: {{ .Values.filebrowser.containerPort }}
         resources:
           requests:
             cpu: {{ .Values.filebrowser.resources.requests.cpu }}
@@ -34,3 +34,20 @@ spec:
       - name: music-volume
         persistentVolumeClaim:
           claimName: music-volume
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: filebrowser
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "commonLabels" . | nindent 4 }}
+spec:
+  ports:
+    - port: {{ .Values.filebrowser.service.port }}
+      targetPort: {{ .Values.filebrowser.containerPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "commonLabels" . | nindent 4 }}
+    app: filebrowser

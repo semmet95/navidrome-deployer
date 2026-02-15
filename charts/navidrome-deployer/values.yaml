@@ -18,8 +18,11 @@ service:
   port: 80
 
 filebrowser:
+  containerPort: 80
   resources:
     limits:
       memory: 200Mi
     requests:
       cpu: 100m
+  service:
+    port: 80
