@@ -10,6 +10,7 @@ spec:
   selector:
     matchLabels:
       {{- include "commonLabels" . | nindent 6 }}
+      app: filebrowser
   template:
     metadata:
       labels:

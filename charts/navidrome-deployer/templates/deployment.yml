@@ -11,6 +11,7 @@ spec:
   selector:
     matchLabels:
       {{- include "commonLabels" . | nindent 6 }}
+      app: navidrome
   template:
     metadata:
       labels:
