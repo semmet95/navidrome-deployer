@@ -34,6 +34,9 @@ spec:
       - name: navidrome
         image: {{ .Values.image.repo }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        envFrom:
+        - configMapRef:
+            name: navidrome-config
         ports:
         - containerPort: {{ .Values.containerPort }}
         readinessProbe:
