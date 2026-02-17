@@ -17,13 +17,15 @@ When reviewing PRs for the main branch, ensure:
 **Requirement:** Whenever the `navidrome-deployer` Helm chart is updated, the chart version **must** be incremented.
 
 **What to check:**
-- Changes to any files in `charts/navidrome-deployer/` (Chart.yml, values.yml, templates/*, etc.)
-- Verify that `charts/navidrome-deployer/Chart.yml` has an updated version field
-- Use semantic versioning: increment patch version for bug fixes, minor for new features, major for breaking changes
-- Flag if chart changes are present but version remains unchanged
-- `appVersion` field in `charts/navidrome-deployer/Chart.yml` should be the same as the Navidrome image tag specified in `charts/navidrome-deployer/values.yaml`
-- `test/helmfile.yaml` and `helmfile.yaml` should have identical dependencies
-- `navidrome` chart version in `helmfile.yaml` should be the latest or next release version of `navidrome-deployer` 
+- Changes to any files in `charts/navidrome-deployer/` (Chart.yml, values.yml, templates/*, etc.).
+- Verify that `charts/navidrome-deployer/Chart.yml` has an updated version field.
+- Use semantic versioning: increment patch version for bug fixes, minor for new features, major for breaking changes.
+- Flag if chart changes are present but version remains unchanged.
+- `appVersion` field in `charts/navidrome-deployer/Chart.yml` should be the same as the Navidrome image tag specified in `charts/navidrome-deployer/values.yaml`.
+- `test/helmfile.yaml` and `helmfile.yaml` should have identical dependencies.
+- `navidrome` chart version in `helmfile.yaml` should be the latest or next release version of `navidrome-deployer`.
+- `filebrowser` version specified in `filebrowser.imageURI` field in `charts/navidrome-deployer/values.yaml` file should be the same as the `FILEBROWSER_VERSION` set in `Dockerfile.filebrowser` file.
+- If `Dockerfile.filebrowser` file is updated `Release Packages` workflow should push the image with updated tag. `filebrowser.reconfigImageUri` field in `charts/navidrome-deployer/values.yaml` file should also be updated accordingly.
 
 ### 2. E2E Test Coverage for Features and Deployments
 
