@@ -1,0 +1,21 @@
+FROM alpine:latest
+
+ARG FILEBROWSER_VERSION=v2.59.0
+
+RUN apk add --no-cache \
+    curl \
+    ca-certificates
+
+# Install filebrowser
+RUN curl -fsSL "https://github.com/filebrowser/filebrowser/releases/download/${FILEBROWSER_VERSION}/linux-amd64-filebrowser.tar.gz" \
+    -o filebrowser.tar.gz && \
+    tar -xzf filebrowser.tar.gz && \
+    chmod +x filebrowser && \
+    mv filebrowser /usr/local/bin/ && \
+    rm filebrowser.tar.gz
+
+# Install kubectl
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+RUN chmod +x kubectl && \
+    mv kubectl /usr/local/bin/ && \
+    apk del curl

@@ -18,6 +18,8 @@ service:
   port: 80
 
 filebrowser:
+  imageURI: "filebrowser/filebrowser:v2.59.0"
+  reconfigImageUri: "ghcr.io/semmet95/navidrome-deployer/filebrowser-reconfig:0.1.0"
   containerPort: 80
   resources:
     limits:

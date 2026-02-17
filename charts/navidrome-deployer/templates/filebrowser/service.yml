@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: filebrowser
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "commonLabels" . | nindent 4 }}
+spec:
+  ports:
+    - port: {{ .Values.filebrowser.service.port }}
+      targetPort: {{ .Values.filebrowser.containerPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "commonLabels" . | nindent 4 }}
+    app: filebrowser

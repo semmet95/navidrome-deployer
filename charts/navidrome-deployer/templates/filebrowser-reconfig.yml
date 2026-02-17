@@ -1,0 +1,70 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: filebrowser-reconfig
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded,hook-failed
+  namespace: {{ .Values.namespace }}
+spec:
+  ttlSecondsAfterFinished: 300  # Auto-cleanup after 5 minutes
+  template:
+    spec:
+      serviceAccountName: filebrowser-config-sa
+      restartPolicy: OnFailure
+      containers:
+      - name: configure
+        image: {{ .Values.filebrowser.reconfigImageUri }}
+        command:
+        - /bin/sh
+        - -c
+        - |
+          set -ex
+
+          DEPLOYMENT="filebrowser"
+          
+          kubectl wait --for=condition=Available deployment/$DEPLOYMENT -n $NAMESPACE --timeout=300s
+
+          kubectl logs -n $NAMESPACE deployment/$DEPLOYMENT --tail=200 > /database/first-run.log
+          
+          # Get current replica count
+          echo "Getting current replica count..."
+          ORIGINAL_REPLICAS=$(kubectl get deployment $DEPLOYMENT -n $NAMESPACE -o jsonpath='{.spec.replicas}')
+          echo "Original replicas: $ORIGINAL_REPLICAS"
+          
+          # Scale down to 0
+          echo "Scaling down deployment to 0..."
+          kubectl scale deployment $DEPLOYMENT -n $NAMESPACE --replicas=0
+          
+          # Wait for pods to terminate
+          echo "Waiting for pods to terminate..."
+          kubectl wait --for=delete pod -l app=filebrowser -n $NAMESPACE --timeout=120s || true
+          sleep 5
+          
+          # Run filebrowser config set
+          echo "Running filebrowser config set..."
+          cd database && filebrowser config set -s --createUserDir --branding.disableUsedPercentage
+          
+          echo "Configuration complete!"
+          
+          # Scale back up to original replica count
+          echo "Scaling deployment back to $ORIGINAL_REPLICAS replicas..."
+          kubectl scale deployment $DEPLOYMENT -n $NAMESPACE --replicas=$ORIGINAL_REPLICAS
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        volumeMounts:
+        # - name: filebrowser-config
+        #   mountPath: /config
+        - name: filebrowser-database
+          mountPath: /database
+      volumes:
+      # - name: filebrowser-config
+      #   persistentVolumeClaim:
+      #     claimName: filebrowser-config
+      - name: filebrowser-database
+        persistentVolumeClaim:
+          claimName: filebrowser-database
