@@ -11,12 +11,16 @@ metadata:
   namespace: {{ .Values.namespace }}
 rules:
 - apiGroups: ["apps", "v1", ""]
-  resources: ["deployments", "deployments/scale"]
+  resources: ["deployments", "pods"]
   resourceNames: ["filebrowser"]
-  verbs: ["get", "patch", "update", "list", "watch"]
+  verbs: ["list", "get", "watch"]
+- apiGroups: ["apps"]
+  resources: ["deployments/scale"]
+  resourceNames: ["filebrowser"]
+  verbs: ["get", "patch", "update"]
 - apiGroups: ["v1", ""]
   resources: ["pods", "pods/log"]
-  verbs: ["get", "list", "watch"]
+  verbs: ["list", "get", "watch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
