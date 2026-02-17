@@ -1,3 +1,6 @@
+helmDefaults:
+  timeout: 600
+
 repositories:
 - name: longhorn
   url: https://charts.longhorn.io
@@ -15,5 +18,8 @@ releases:
   namespace: navidrome-system
   chart: ../charts/navidrome-deployer
   createNamespace: true
+  values:
+  - filebrowser:
+      reconfigImageUri: "filebrowser-reconfig:snapshot"
   needs:
   - longhorn-system/longhorn

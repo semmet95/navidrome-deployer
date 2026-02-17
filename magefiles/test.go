@@ -30,6 +30,8 @@ const (
 
 var (
 	kubeConfigPath string
+
+	jobListND = []string{"filebrowser-reconfig"}
 )
 
 func init() {
@@ -126,6 +128,28 @@ func (Test) CheckDeployments() error {
 	return nil
 }
 
+func (Test) CheckJobs() error {
+	opts := &k8s.KubectlOptions{
+		ConfigPath: kubeConfigPath,
+		Namespace:  navidromeNamespace,
+	}
+
+	for _, name := range jobListND {
+		jobDeleted := util.WaitUntilJobDeleted(
+			context.TODO(),
+			&testing.T{},
+			opts,
+			name,
+		)
+
+		if !jobDeleted {
+			return fmt.Errorf("job %s/%s still exists", navidromeNamespace, name)
+		}
+	}
+
+	return nil
+}
+
 func (Test) DeployApp() {
-	mg.Deps(Test.CheckDeployments)
+	mg.SerialDeps(Test.CheckDeployments, Test.CheckJobs)
 }

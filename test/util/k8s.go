@@ -9,8 +9,10 @@ import (
 
 	"github.com/gruntwork-io/terratest/modules/helm"
 	"github.com/gruntwork-io/terratest/modules/k8s"
+	"github.com/gruntwork-io/terratest/modules/retry"
 	v1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -79,4 +81,23 @@ func DescribePod(ctx context.Context, t *testing.T, opts *k8s.KubectlOptions, po
 		return "", fmt.Errorf("failed to describe pod %s: %v", podName, err)
 	}
 	return output, nil
+}
+
+func WaitUntilJobDeleted(ctx context.Context, t *testing.T, opts *k8s.KubectlOptions, jobName string) bool {
+	message := fmt.Sprintf("waiting for job %s to be deleted", jobName)
+	jobDeleted := false
+
+	retry.DoWithRetry(t, message, 10, 30*time.Second, func() (string, error) {
+		_, err := k8s.GetJobE(t, opts, jobName)
+
+		if err != nil {
+			if errors.IsNotFound(err) {
+				jobDeleted = true
+				return "", nil
+			}
+		}
+		return "", fmt.Errorf("job %s still exists", jobName)
+	})
+
+	return jobDeleted
 }

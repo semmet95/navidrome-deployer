@@ -33,6 +33,12 @@ jobs:
       shell: bash
       run: |
         scripts/longhorn-preflight.sh
+    - name: Build Docker image
+      shell: bash
+      run: |
+        set -ex
+        docker build -t filebrowser-reconfig:snapshot . -f Dockerfile.filebrowser
+        docker save filebrowser-reconfig:snapshot | sudo k3s ctr images import -
     - uses: helmfile/helmfile-action@v2.2.0
       with:
         helmfile-args: apply
@@ -43,3 +49,9 @@ jobs:
       with:
         version: latest
         args: test:deployApp
+    - name: Print cluster state
+      if: always()
+      continue-on-error: true
+      shell: bash
+      run: |
+        scripts/print-cluster-state.sh

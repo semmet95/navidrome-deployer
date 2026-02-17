@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: filebrowser-reconfig
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  namespace: {{ .Values.namespace }}
+spec:
+  template:
+    spec:
+      restartPolicy: "Never"
+      serviceAccountName: filebrowser-config-sa
+      containers:
+      - name: filebrowser-reconfig
+        image: {{ .Values.filebrowser.reconfigImageUri }}
+        command:
+        - /bin/sh
+        - -c
+        - |
+          set -ex
+
+          DEPLOYMENT="filebrowser"
+          kubectl wait --for=condition=Available deployment/$DEPLOYMENT -n $NAMESPACE --timeout=300s
+
+          # store the random generated password for the first time login
+          kubectl logs -n $NAMESPACE deployment/$DEPLOYMENT --tail=200 > /database/first-run.log
+
+          ORIGINAL_REPLICAS=$(kubectl get deployment $DEPLOYMENT -n $NAMESPACE -o jsonpath='{.spec.replicas}')
+          kubectl scale deployment $DEPLOYMENT -n $NAMESPACE --replicas=0
+          kubectl wait --for=delete pod -l app=filebrowser -n $NAMESPACE --timeout=120s
+          cd database && filebrowser config set -s --createUserDir --branding.disableUsedPercentage
+          kubectl scale deployment $DEPLOYMENT -n $NAMESPACE --replicas=$ORIGINAL_REPLICAS
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        volumeMounts:
+        - name: filebrowser-database
+          mountPath: /database
+      volumes:
+      - name: filebrowser-database
+        persistentVolumeClaim:
+          claimName: filebrowser-database
