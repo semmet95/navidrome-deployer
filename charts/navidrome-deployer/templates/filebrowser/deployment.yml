@@ -17,25 +17,9 @@ spec:
         {{- include "commonLabels" . | nindent 8 }}
         app: filebrowser
     spec:
-      # initContainers:
-      # - name: filebrowser-config
-      #   image: {{ .Values.filebrowser.imageURI }}
-      #   command: ['sh', '-c', 'cd database && filebrowser config init -s']
-      #   volumeMounts:
-      #   # - name: filebrowser-config
-      #   #   mountPath: /config
-      #   - name: filebrowser-database
-      #     mountPath: /database
       containers:
       - name: filebrowser
         image: {{ .Values.filebrowser.imageURI }}
-        # lifecycle:
-        #   postStart:
-        #     exec:
-        #       command:
-        #       - /bin/sh
-        #       - -c
-        #       - cd /database && filebrowser config set -s
         ports:
         - containerPort: {{ .Values.filebrowser.containerPort }}
         resources:
@@ -44,16 +28,11 @@ spec:
           limits:
             memory: {{ .Values.filebrowser.resources.limits.memory }}
         volumeMounts:
-        # - name: filebrowser-config
-        #   mountPath: /config
         - name: filebrowser-database
           mountPath: /database
         - name: music-volume
           mountPath: /srv
       volumes:
-      # - name: filebrowser-config
-      #   persistentVolumeClaim:
-      #     claimName: filebrowser-config
       - name: filebrowser-database
         persistentVolumeClaim:
           claimName: filebrowser-database
