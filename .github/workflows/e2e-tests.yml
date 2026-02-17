@@ -43,3 +43,9 @@ jobs:
       with:
         version: latest
         args: test:deployApp
+    - name: Print cluster state
+      if: always()
+      continue-on-error: true
+      shell: bash
+      run: |
+        scripts/print-cluster-state.sh
