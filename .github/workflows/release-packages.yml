@@ -54,6 +54,12 @@ jobs:
             https://github.com/$IMAGE_NAME/releases/download/${{ github.event.repository.name }}-${{ steps.chart-metadata.outputs.version }}/${{ steps.chart-metadata.outputs.name }}-${{ steps.chart-metadata.outputs.version }}.tgz
           helm push ./${{ steps.chart-metadata.outputs.name }}-${{ steps.chart-metadata.outputs.version }}.tgz \
             "oci://$REGISTRY/$IMAGE_NAME/charts"
+      - name: Push filebrowser-config image
+        run: |
+          set -e
+          image_tag="$REGISTRY/$IMAGE_NAME/filebrowser-reconfig:${{ steps.chart-metadata.outputs.version }}"
+          docker build -t "$image_tag" . -f Dockerfile.filebrowser
+          docker push "$image_tag"
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
