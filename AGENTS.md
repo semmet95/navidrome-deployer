@@ -23,7 +23,7 @@ When reviewing PRs for the main branch, ensure:
 - Flag if chart changes are present but version remains unchanged.
 - `appVersion` field in `charts/navidrome-deployer/Chart.yml` should be the same as the Navidrome image tag specified in `charts/navidrome-deployer/values.yaml`.
 - `test/helmfile.yaml` and `helmfile.yaml` should have identical dependencies.
-- `navidrome` chart version in `helmfile.yaml` should be the latest or next release version of `navidrome-deployer`.
+- `version` field in `charts/navidrome-deployer/Chart.yml` should be the same as chart version specified in `helmfile.yaml` for the `navidrome/navidrome-deployer` chart.
 - `filebrowser` version specified in `filebrowser.imageURI` field in `charts/navidrome-deployer/values.yaml` file should be the same as the `FILEBROWSER_VERSION` set in `Dockerfile.filebrowser` file.
 - If `Dockerfile.filebrowser` file is updated `Release Packages` workflow should push the image with updated tag. `filebrowser.reconfigImageUri` field in `charts/navidrome-deployer/values.yaml` file should also be updated accordingly.
 
