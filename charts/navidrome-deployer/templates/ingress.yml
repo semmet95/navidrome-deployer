@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: traefik
+  name: nginx-ingress
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "commonLabels" . | nindent 4 }}
+    {{- include "appLabels" . | nindent 4 }}
+spec:
+  rules:
+  - host: demo.0d652485-6bb6-465f-b3b3-eb12485d9aee.lb.civo.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: nginx-demo
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - demo.0d652485-6bb6-465f-b3b3-eb12485d9aee.lb.civo.com
+    secretName: demo 
