@@ -33,7 +33,7 @@ releases:
 - name: navidrome
   namespace: navidrome-system
   chart: navidrome/navidrome-deployer
-  version: 0.13.0
+  version: 0.14.0
   createNamespace: true
   disableValidationOnInstall: true
   values:

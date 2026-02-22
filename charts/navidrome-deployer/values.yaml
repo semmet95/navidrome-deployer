@@ -18,7 +18,7 @@ service:
   port: 80
 
 # Public endpoints configuration
-baseDomain: ""
+baseDomain: "example.com"
 clusterissuer:
   email: singhamitch@outlook.com
   privateKeySecretRef:
