@@ -4,11 +4,19 @@ helmDefaults:
 repositories:
 - name: longhorn
   url: https://charts.longhorn.io
+- name: cert-manager
+  url: quay.io/jetstack/charts
+  oci: true
 - name: navidrome
   url: ghcr.io/semmet95/navidrome-deployer/charts
   oci: true
 
 releases:
+- name: cert-manager
+  namespace: cert-manager
+  chart: cert-manager/cert-manager
+  version: v1.19.2
+  createNamespace: true
 - name: longhorn
   namespace: longhorn-system
   chart: longhorn/longhorn
@@ -24,3 +32,4 @@ releases:
   createNamespace: true
   needs:
   - longhorn-system/longhorn
+  - cert-manager/cert-manager
