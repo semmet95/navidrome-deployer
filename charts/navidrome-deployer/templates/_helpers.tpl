@@ -13,3 +13,16 @@ App labels
 {{- define "appLabels" -}}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
+
+{{/*
+Returns the LoadBalancer hostname from the ingress controller service.
+*/}}
+{{- define "baseDomain" -}}
+{{- $svc := (lookup "v1" "Service" "kube-system" "traefik") -}}
+{{- if $svc -}}
+  {{- $loadbalancerId := (index $svc.metadata.annotations "kubernetes.civo.com/loadbalancer-id") -}}
+  {{- printf "%s.lb.civo.com" .loadbalancerId -}}
+{{- else -}}
+  {{- .Values.baseDomain -}}
+{{- end -}}
+{{- end -}}

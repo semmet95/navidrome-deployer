@@ -11,7 +11,7 @@ metadata:
     {{- include "appLabels" . | nindent 4 }}
 spec:
   rules:
-  - host: navidrome.ef6ea7c0-f649-4c64-a06f-d07d6cad68cc.lb.civo.com
+  - host: navidrome.{{ include "baseDomain" . }}
     http:
       paths:
       - backend:
@@ -21,7 +21,7 @@ spec:
               number: 80
         path: /
         pathType: Prefix
-  - host: navidrome-uploader.ef6ea7c0-f649-4c64-a06f-d07d6cad68cc.lb.civo.com
+  - host: navidrome-uploader.{{ include "baseDomain" . }}
     http:
       paths:
       - backend:
@@ -33,6 +33,6 @@ spec:
         pathType: Prefix
   tls:
   - hosts:
-    - navidrome.ef6ea7c0-f649-4c64-a06f-d07d6cad68cc.lb.civo.com
-    - navidrome-uploader.ef6ea7c0-f649-4c64-a06f-d07d6cad68cc.lb.civo.com
+    - navidrome.{{ include "baseDomain" . }}
+    - navidrome-uploader.{{ include "baseDomain" . }}
     secretName: navidrome

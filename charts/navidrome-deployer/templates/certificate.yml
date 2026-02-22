@@ -9,8 +9,8 @@ metadata:
 spec:
   secretName: navidrome
   issuerRef:
-    name: letsencrypt-prod
+    name: {{ .Values.clusterissuer.privateKeySecretRef.name }}
     kind: ClusterIssuer
   dnsNames:
-  - navidrome.ef6ea7c0-f649-4c64-a06f-d07d6cad68cc.lb.civo.com
-  - navidrome-uploader.ef6ea7c0-f649-4c64-a06f-d07d6cad68cc.lb.civo.com
+  - navidrome.{{ include "baseDomain" . }}
+  - navidrome-uploader.{{ include "baseDomain" . }}

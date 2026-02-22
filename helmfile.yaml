@@ -36,6 +36,9 @@ releases:
   version: 0.13.0
   createNamespace: true
   disableValidationOnInstall: true
+  values:
+  - values.yaml
+  - values.yaml.gotmpl
   needs:
   - cert-manager/cert-manager
   - longhorn-system/longhorn
