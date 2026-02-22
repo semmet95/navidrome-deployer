@@ -12,4 +12,5 @@ spec:
     name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
-  - demo.0d652485-6bb6-465f-b3b3-eb12485d9aee.lb.civo.com
+  - navidrome.ef6ea7c0-f649-4c64-a06f-d07d6cad68cc.lb.civo.com
+  - navidrome-uploader.ef6ea7c0-f649-4c64-a06f-d07d6cad68cc.lb.civo.com

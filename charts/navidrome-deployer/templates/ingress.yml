@@ -11,17 +11,28 @@ metadata:
     {{- include "appLabels" . | nindent 4 }}
 spec:
   rules:
-  - host: demo.0d652485-6bb6-465f-b3b3-eb12485d9aee.lb.civo.com
+  - host: navidrome.ef6ea7c0-f649-4c64-a06f-d07d6cad68cc.lb.civo.com
     http:
       paths:
       - backend:
           service:
-            name: nginx-demo
+            name: navidrome
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: navidrome-uploader.ef6ea7c0-f649-4c64-a06f-d07d6cad68cc.lb.civo.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: filebrowser
             port:
               number: 80
         path: /
         pathType: Prefix
   tls:
   - hosts:
-    - demo.0d652485-6bb6-465f-b3b3-eb12485d9aee.lb.civo.com
-    secretName: demo 
+    - navidrome.ef6ea7c0-f649-4c64-a06f-d07d6cad68cc.lb.civo.com
+    - navidrome-uploader.ef6ea7c0-f649-4c64-a06f-d07d6cad68cc.lb.civo.com
+    secretName: navidrome
