@@ -1,5 +1,7 @@
 helmDefaults:
   timeout: 600
+  wait: true
+  waitForJobs: true
 
 repositories:
 - name: longhorn
@@ -14,7 +16,6 @@ releases:
   chart: cert-manager/cert-manager
   version: v1.19.2
   createNamespace: true
-  wait: true
   values:
   - crds:
       enabled: true 
@@ -23,7 +24,6 @@ releases:
   chart: longhorn/longhorn
   version: 1.11.0
   createNamespace: true
-  wait: true
   values:
   - longhornUI:
       replicas: 0
@@ -31,11 +31,10 @@ releases:
   namespace: navidrome-system
   chart: ../charts/navidrome-deployer
   createNamespace: true
-  wait: true
-  waitForJobs: true
+  disableValidationOnInstall: true
   values:
   - filebrowser:
       reconfigImageUri: "filebrowser-reconfig:snapshot"
   needs:
-  - longhorn-system/longhorn
   - cert-manager/cert-manager
+  - longhorn-system/longhorn
