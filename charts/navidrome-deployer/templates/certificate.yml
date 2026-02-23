@@ -1,7 +1,7 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: navidrome
+  name: {{ .Values.certificate.secret }}
   namespace: {{ .Values.namespace }}
   labels:
     {{- include "commonLabels" . | nindent 4 }}
