@@ -21,8 +21,7 @@ service:
 baseDomain: "example.com"
 clusterissuer:
   email: singhamitch@outlook.com
-  privateKeySecretRef:
-    name: letsencrypt-prod
+  name: letsencrypt-prod
 certificate:
   secret: navidrome-cert
 

@@ -9,7 +9,7 @@ metadata:
 spec:
   secretName: {{ .Values.certificate.secret }}
   issuerRef:
-    name: {{ .Values.clusterissuer.privateKeySecretRef.name }}
+    name: {{ .Values.clusterissuer.name }}
     kind: ClusterIssuer
   dnsNames:
   - navidrome.{{ include "baseDomain" . }}
