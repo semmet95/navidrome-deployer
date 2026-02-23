@@ -3,13 +3,13 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    kubernetes.io/ingress.class: traefik
   name: navidrome
   namespace: {{ .Values.namespace }}
   labels:
     {{- include "commonLabels" . | nindent 4 }}
     {{- include "appLabels" . | nindent 4 }}
 spec:
+  ingressClassName: traefik
   rules:
   - host: navidrome.{{ include "baseDomain" . }}
     http:
@@ -35,4 +35,4 @@ spec:
   - hosts:
     - navidrome.{{ include "baseDomain" . }}
     - navidrome-uploader.{{ include "baseDomain" . }}
-    secretName: navidrome
+    secretName: {{ .Values.certificate.secret }}

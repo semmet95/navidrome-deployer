@@ -18,7 +18,7 @@ releases:
   createNamespace: true
   values:
   - crds:
-      enabled: true 
+      enabled: true
 - name: longhorn
   namespace: longhorn-system
   chart: longhorn/longhorn
