@@ -17,6 +17,14 @@ service:
   type: LoadBalancer
   port: 80
 
+# Public endpoints configuration
+baseDomain: "example.com"
+clusterissuer:
+  email: singhamitch@outlook.com
+  name: letsencrypt-prod
+certificate:
+  secret: navidrome-cert
+
 filebrowser:
   imageURI: "filebrowser/filebrowser:v2.59.0"
   reconfigImageUri: "ghcr.io/semmet95/navidrome-deployer/filebrowser-reconfig:0.12.1"
