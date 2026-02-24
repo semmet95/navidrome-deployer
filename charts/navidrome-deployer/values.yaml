@@ -22,8 +22,6 @@ baseDomain: "example.com"
 clusterissuer:
   email: singhamitch@outlook.com
   name: letsencrypt-prod
-certificate:
-  secret: navidrome-cert
 
 filebrowser:
   imageURI: "filebrowser/filebrowser:v2.59.0"
