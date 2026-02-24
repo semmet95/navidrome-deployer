@@ -7,4 +7,4 @@ kubectl describe deploy filebrowser -n navidrome-system
 kubectl describe job filebrowser-reconfig -n navidrome-system
 kubectl get ClusterIssuer -A
 kubectl get Certificate -A
-kubectl get ing -A -o wide
+kubectl get IngressRoute -A -o wide
