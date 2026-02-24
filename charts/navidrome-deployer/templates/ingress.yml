@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: {{ .Values.clusterissuer.name }}
     kubernetes.io/ingress.class: traefik
   name: navidrome
   namespace: {{ .Values.namespace }}
@@ -35,4 +35,4 @@ spec:
   - hosts:
     - navidrome.{{ include "baseDomain" . }}
     - navidrome-uploader.{{ include "baseDomain" . }}
-    secretName: {{ .Values.certificate.secret }}
+    secretName: navidrome-ing
