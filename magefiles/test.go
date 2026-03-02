@@ -21,6 +21,7 @@ type Test mg.Namespace
 const (
 	// helm config
 	longhornNamespace = "longhorn-system"
+	certManagerNamespace = "cert-manager"
 	releaseName       = "navidrome-deployer"
 	releaseNamespace  = "default"
 
@@ -67,7 +68,19 @@ func (Test) CheckDeployments() error {
 		panic(err)
 	}
 
-	for _, deploy := range append(longhornDeployments, navidromeDeployments...) {
+	certManagerDeployments, err := k8s.ListDeploymentsE(
+		&testing.T{},
+		&k8s.KubectlOptions{
+			ConfigPath: kubeConfigPath,
+			Namespace:  certManagerNamespace,
+		},
+		v1.ListOptions{},
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, deploy := range append(certManagerDeployments, append(longhornDeployments, navidromeDeployments...)...) {
 		opts := &k8s.KubectlOptions{
 			ConfigPath: kubeConfigPath,
 			Namespace:  deploy.Namespace,
@@ -128,6 +141,7 @@ func (Test) CheckDeployments() error {
 	return nil
 }
 
+// TODO: update function to verify the job exists and is completed
 func (Test) CheckJobs() error {
 	opts := &k8s.KubectlOptions{
 		ConfigPath: kubeConfigPath,
@@ -135,15 +149,16 @@ func (Test) CheckJobs() error {
 	}
 
 	for _, name := range jobListND {
-		jobDeleted := util.WaitUntilJobDeleted(
+		fmt.Printf("waiting for job %s to be completed\n", name)
+		err := util.WaitUntilJobCompletes(
 			context.TODO(),
 			&testing.T{},
 			opts,
 			name,
 		)
 
-		if !jobDeleted {
-			return fmt.Errorf("job %s/%s still exists", navidromeNamespace, name)
+		if err != nil {
+			return fmt.Errorf("job %s/%s failed to complete successfully with error: %v", navidromeNamespace, name, err)
 		}
 	}
 

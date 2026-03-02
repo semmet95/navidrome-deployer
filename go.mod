@@ -3,6 +3,7 @@ module navidrome-deployer
 go 1.24.0
 
 require (
+	github.com/avast/retry-go/v5 v5.0.0
 	github.com/gruntwork-io/terratest v0.54.0
 	github.com/magefile/mage v1.15.0
 	k8s.io/api v0.34.2

@@ -1,6 +1,5 @@
 # Application settings
 namespace: navidrome-system
-replicaCount: 2
 image:
   repo: "deluan/navidrome"
   tag: "0.58.5"
@@ -8,9 +7,9 @@ image:
 containerPort: 4533
 resources:
   limits:
-    memory: 400Mi
+    memory: 1Gi
   requests:
-    cpu: 100m
+    cpu: 500m
 
 # Service configuration
 service:
@@ -22,15 +21,17 @@ baseDomain: "example.com"
 clusterissuer:
   email: singhamitch@outlook.com
   name: letsencrypt-prod
+certificate:
+  secret: navidrome-cert
 
 filebrowser:
   imageURI: "filebrowser/filebrowser:v2.59.0"
-  reconfigImageUri: "ghcr.io/semmet95/navidrome-deployer/filebrowser-reconfig:0.12.1"
+  reconfigImageUri: "ghcr.io/semmet95/navidrome-deployer/filebrowser-reconfig:0.19.0"
   containerPort: 80
   resources:
     limits:
-      memory: 200Mi
+      memory: 512Mi
     requests:
-      cpu: 100m
+      cpu: 500m
   service:
     port: 80

@@ -2,17 +2,18 @@ package util
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 	"testing"
 	"time"
 
+	"github.com/avast/retry-go/v5"
 	"github.com/gruntwork-io/terratest/modules/helm"
 	"github.com/gruntwork-io/terratest/modules/k8s"
-	"github.com/gruntwork-io/terratest/modules/retry"
 	v1 "k8s.io/api/apps/v1"
+	batchV1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -83,21 +84,34 @@ func DescribePod(ctx context.Context, t *testing.T, opts *k8s.KubectlOptions, po
 	return output, nil
 }
 
-func WaitUntilJobDeleted(ctx context.Context, t *testing.T, opts *k8s.KubectlOptions, jobName string) bool {
-	message := fmt.Sprintf("waiting for job %s to be deleted", jobName)
-	jobDeleted := false
-
-	retry.DoWithRetry(t, message, 10, 30*time.Second, func() (string, error) {
-		_, err := k8s.GetJobE(t, opts, jobName)
-
-		if err != nil {
-			if errors.IsNotFound(err) {
-				jobDeleted = true
-				return "", nil
+func WaitUntilJobCompletes(ctx context.Context, t *testing.T, opts *k8s.KubectlOptions, jobName string) error {
+	return retry.New(
+		retry.Attempts(10),
+		retry.Delay(30*time.Second),
+	).Do(
+		func() error {
+			var errMsg string
+			job, err := k8s.GetJobE(t, opts, jobName)
+			if err != nil {
+				return err
 			}
-		}
-		return "", fmt.Errorf("job %s still exists", jobName)
-	})
 
-	return jobDeleted
+			for _, jobCondition := range job.Status.Conditions {
+				if jobCondition.Type == batchV1.JobSuccessCriteriaMet && jobCondition.Status == corev1.ConditionTrue {
+					return nil
+				} else {
+					errMsg = fmt.Sprintf(
+						"job completion status is %v with message: %s",
+						jobCondition.Status,
+						jobCondition.Message,
+					)
+					fmt.Println(errMsg)
+					return errors.New(errMsg)
+				}
+			}
+			errMsg = fmt.Sprintf("failed to iterate over job conditions: %v", job.Status.Conditions)
+			fmt.Println(errMsg)
+			return errors.New(errMsg)
+		},
+	)
 }
