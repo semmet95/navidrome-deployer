@@ -10,7 +10,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`navidrome.{{ include "baseDomain" . }}`) && ! PathPrefix(`/user`)
+    - match: Host(`navidrome.{{ include "baseDomain" . }}`) && ! PathPrefix(`/api/user`)
       kind: Rule
       middlewares:
         - name: rate-limit
@@ -18,7 +18,7 @@ spec:
       services:
         - name: navidrome
           port: 80
-    - match: Host(`navidrome-uploader.{{ include "baseDomain" . }}`) && ! PathPrefix(`/settings/global`) && ! PathPrefix(`/settings/users`)
+    - match: Host(`navidrome-uploader.{{ include "baseDomain" . }}`) && ! PathPrefix(`/api/settings`) && ! PathPrefix(`/settings/global`) && ! PathPrefix(`/settings/users`)
       kind: Rule
       middlewares:
         - name: rate-limit

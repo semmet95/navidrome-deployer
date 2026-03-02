@@ -33,8 +33,11 @@ spec:
           ORIGINAL_REPLICAS=$(kubectl get deployment $DEPLOYMENT -n $NAMESPACE -o jsonpath='{.spec.replicas}')
           kubectl scale deployment $DEPLOYMENT -n $NAMESPACE --replicas=0
           kubectl wait --for=delete pod -l app=filebrowser -n $NAMESPACE --timeout=120s
+
           cd database
           filebrowser config set -s --createUserDir --branding.disableUsedPercentage
+          filebrowser users update admin --lockPassword
+
           kubectl scale deployment $DEPLOYMENT -n $NAMESPACE --replicas=$ORIGINAL_REPLICAS
         env:
         - name: NAMESPACE

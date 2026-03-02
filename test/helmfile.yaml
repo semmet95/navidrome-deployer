@@ -38,9 +38,9 @@ releases:
   chart: ../charts/navidrome-deployer
   createNamespace: true
   disableValidationOnInstall: true
-  # values:
-  # - filebrowser:
-  #     reconfigImageUri: "filebrowser-reconfig:snapshot"
+  values:
+  - filebrowser:
+      reconfigImageUri: "filebrowser-reconfig:snapshot"
   needs:
   - cert-manager/cert-manager
   - longhorn-system/longhorn
