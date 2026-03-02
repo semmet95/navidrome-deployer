@@ -26,5 +26,5 @@ metadata:
     {{- include "appLabels" . | nindent 4 }}
 spec:
   rateLimit:
-    average: 10
-    burst: 100
+    average: 50
+    burst: 200

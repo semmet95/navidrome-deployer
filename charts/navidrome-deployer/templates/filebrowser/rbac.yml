@@ -3,12 +3,18 @@ kind: ServiceAccount
 metadata:
   name: filebrowser-config-sa
   namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "commonLabels" . | nindent 4 }}
+    {{- include "appLabels" . | nindent 4 }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: filebrowser-config-role
   namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "commonLabels" . | nindent 4 }}
+    {{- include "appLabels" . | nindent 4 }}
 rules:
 - apiGroups: ["apps", "v1", ""]
   resources: ["deployments", "pods"]
@@ -27,6 +33,9 @@ kind: RoleBinding
 metadata:
   name: filebrowser-config-binding
   namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "commonLabels" . | nindent 4 }}
+    {{- include "appLabels" . | nindent 4 }}
 subjects:
 - kind: ServiceAccount
   name: filebrowser-config-sa

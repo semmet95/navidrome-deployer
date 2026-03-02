@@ -7,7 +7,7 @@ metadata:
     {{- include "commonLabels" . | nindent 4 }}
     {{- include "appLabels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
       {{- include "commonLabels" . | nindent 6 }}
@@ -44,8 +44,8 @@ spec:
             path: /
             port: {{ .Values.containerPort }}
           initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 3
+          periodSeconds: 30
+          timeoutSeconds: 10
           failureThreshold: 3
         resources:
           requests:

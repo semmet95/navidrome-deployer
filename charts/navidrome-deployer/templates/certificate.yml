@@ -7,7 +7,7 @@ metadata:
     {{- include "commonLabels" . | nindent 4 }}
     {{- include "appLabels" . | nindent 4 }}
 spec:
-  secretName: navidrome-cert
+  secretName: {{ .Values.certificate.secret }}
   issuerRef:
     name: {{ .Values.clusterissuer.name }}
     kind: ClusterIssuer

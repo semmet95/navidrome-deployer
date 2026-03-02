@@ -5,6 +5,7 @@ metadata:
   namespace: {{ .Values.namespace }}
   labels:
     {{- include "commonLabels" . | nindent 4 }}
+    {{- include "appLabels" . | nindent 4 }}
 spec:
   ports:
     - port: {{ .Values.filebrowser.service.port }}
