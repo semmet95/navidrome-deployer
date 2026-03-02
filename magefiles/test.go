@@ -21,6 +21,7 @@ type Test mg.Namespace
 const (
 	// helm config
 	longhornNamespace = "longhorn-system"
+	certManagerNamespace = "cert-manager"
 	releaseName       = "navidrome-deployer"
 	releaseNamespace  = "default"
 
@@ -67,7 +68,19 @@ func (Test) CheckDeployments() error {
 		panic(err)
 	}
 
-	for _, deploy := range append(longhornDeployments, navidromeDeployments...) {
+	certManagerDeployments, err := k8s.ListDeploymentsE(
+		&testing.T{},
+		&k8s.KubectlOptions{
+			ConfigPath: kubeConfigPath,
+			Namespace:  certManagerNamespace,
+		},
+		v1.ListOptions{},
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, deploy := range append(certManagerDeployments, append(longhornDeployments, navidromeDeployments...)...) {
 		opts := &k8s.KubectlOptions{
 			ConfigPath: kubeConfigPath,
 			Namespace:  deploy.Namespace,

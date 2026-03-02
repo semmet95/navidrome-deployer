@@ -97,8 +97,7 @@ func WaitUntilJobCompletes(ctx context.Context, t *testing.T, opts *k8s.KubectlO
 			}
 
 			for _, jobCondition := range job.Status.Conditions {
-				fmt.Printf("job condition type is %s and status is %s\n", jobCondition.Type, jobCondition.Status)
-				if jobCondition.Type == batchV1.JobComplete && jobCondition.Status == corev1.ConditionTrue {
+				if jobCondition.Type == batchV1.JobSuccessCriteriaMet && jobCondition.Status == corev1.ConditionTrue {
 					return nil
 				} else {
 					errMsg = fmt.Sprintf(
