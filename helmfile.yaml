@@ -27,7 +27,7 @@ releases:
         requests:
           cpu: 50m
         limits:
-          memory: 128Mi
+          memory: 256Mi
 - name: longhorn
   namespace: longhorn-system
   chart: longhorn/longhorn
@@ -39,7 +39,7 @@ releases:
 - name: navidrome
   namespace: navidrome-system
   chart: navidrome/navidrome-deployer
-  version: 0.15.0
+  version: 0.19.0
   createNamespace: true
   disableValidationOnInstall: true
   needs:
