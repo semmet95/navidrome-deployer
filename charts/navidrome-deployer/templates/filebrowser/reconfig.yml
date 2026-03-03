@@ -15,6 +15,16 @@ spec:
     spec:
       restartPolicy: "Never"
       serviceAccountName: filebrowser-config-sa
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - filebrowser
+            topologyKey: "kubernetes.io/hostname"
       containers:
       - name: filebrowser-reconfig
         image: {{ .Values.filebrowser.reconfigImageUri }}
