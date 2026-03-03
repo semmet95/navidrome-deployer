@@ -7,9 +7,9 @@ image:
 containerPort: 4533
 resources:
   limits:
-    memory: 1Gi
+    memory: 1536Mi
   requests:
-    cpu: 500m
+    cpu: 1500m
 
 # Service configuration
 service:
