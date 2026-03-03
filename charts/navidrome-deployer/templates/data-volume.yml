@@ -8,7 +8,7 @@ metadata:
     {{- include "appLabels" . | nindent 4 }}
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   storageClassName: longhorn
   resources:
     requests:

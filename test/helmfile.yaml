@@ -41,6 +41,11 @@ releases:
   values:
   - filebrowser:
       reconfigImageUri: "filebrowser-reconfig:snapshot"
+  # - resources:
+  #     limits:
+  #       memory: 512Mi
+  #     requests:
+  #       cpu: 250m
   needs:
   - cert-manager/cert-manager
   - longhorn-system/longhorn
