@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-ARG FILEBROWSER_VERSION=v2.59.0
+ARG FILEBROWSER_VERSION=v2.61.0
 
 RUN apk add --no-cache \
     curl \
