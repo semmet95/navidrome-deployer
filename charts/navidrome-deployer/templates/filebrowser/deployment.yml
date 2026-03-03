@@ -20,6 +20,13 @@ spec:
       containers:
       - name: filebrowser
         image: {{ .Values.filebrowser.imageURI }}
+        lifecycle:
+          postStart:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - cd /srv && rm -rf lost+found
         ports:
         - containerPort: {{ .Values.filebrowser.containerPort }}
         resources:
