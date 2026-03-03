@@ -2,14 +2,14 @@
 namespace: navidrome-system
 image:
   repo: "deluan/navidrome"
-  tag: "0.58.5"
+  tag: "0.60.3"
   pullPolicy: IfNotPresent
 containerPort: 4533
 resources:
   limits:
     memory: 1536Mi
   requests:
-    cpu: 1500m
+    cpu: 1250m
 
 # Service configuration
 service:
@@ -25,8 +25,8 @@ certificate:
   secret: navidrome-cert
 
 filebrowser:
-  imageURI: "filebrowser/filebrowser:v2.59.0"
-  reconfigImageUri: "ghcr.io/semmet95/navidrome-deployer/filebrowser-reconfig:0.19.0"
+  imageURI: "filebrowser/filebrowser:v2.61.0"
+  reconfigImageUri: "ghcr.io/semmet95/navidrome-deployer/filebrowser-reconfig:0.20.0"
   containerPort: 80
   resources:
     limits:

@@ -17,9 +17,26 @@ spec:
         {{- include "commonLabels" . | nindent 8 }}
         app: filebrowser
     spec:
+      initContainers:
+      - name: fix-permissions
+        image: alpine:latest
+        command:
+        - /bin/sh
+        - -c
+        - chmod -R 777 /database
+        volumeMounts:
+        - name: filebrowser-database
+          mountPath: /database
       containers:
       - name: filebrowser
         image: {{ .Values.filebrowser.imageURI }}
+        lifecycle:
+          postStart:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - cd /srv && rm -rf lost+found
         ports:
         - containerPort: {{ .Values.filebrowser.containerPort }}
         resources:
