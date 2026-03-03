@@ -45,7 +45,7 @@ spec:
           kubectl wait --for=delete pod -l app=filebrowser -n $NAMESPACE --timeout=120s
 
           cd database
-          filebrowser config set -s --createUserDir --branding.disableUsedPercentage
+          filebrowser config set -s --createUserDir --branding.disableUsedPercentage --minimum-password-length 8
           filebrowser users update admin --lockPassword
 
           kubectl scale deployment $DEPLOYMENT -n $NAMESPACE --replicas=$ORIGINAL_REPLICAS

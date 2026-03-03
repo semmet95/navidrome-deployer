@@ -19,11 +19,13 @@ spec:
     spec:
       initContainers:
       - name: fix-permissions
-        image: alpine:latest
+        image: {{ .Values.filebrowser.imageURI }}
         command:
         - /bin/sh
         - -c
         - chmod -R 777 /database
+        securityContext:
+          runAsUser: 0
         volumeMounts:
         - name: filebrowser-database
           mountPath: /database
@@ -44,6 +46,8 @@ spec:
             cpu: {{ .Values.filebrowser.resources.requests.cpu }}
           limits:
             memory: {{ .Values.filebrowser.resources.limits.memory }}
+        securityContext:
+          runAsUser: 0
         volumeMounts:
         - name: filebrowser-database
           mountPath: /database
