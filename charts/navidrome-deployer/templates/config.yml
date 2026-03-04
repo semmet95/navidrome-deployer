@@ -8,4 +8,4 @@ metadata:
     {{- include "appLabels" . | nindent 4 }}
 data:
   ND_ENABLEUSEREDITING: "false"
-  ND_SCANNER_SCHEDULE: "*/2 * * * *"
+  ND_SCANNER_SCHEDULE: "*/1 * * * *"
