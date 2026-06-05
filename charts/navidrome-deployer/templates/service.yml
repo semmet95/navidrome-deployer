@@ -7,6 +7,9 @@ metadata:
     {{- include "commonLabels" . | nindent 4 }}
     {{- include "appLabels" . | nindent 4 }}
 spec:
+  {{ if .Values.service.type }}
+  type: {{ .Values.service.type }}
+  {{ end }}
   ports:
     - port: {{ .Values.service.port }}
       targetPort: {{ .Values.containerPort }}

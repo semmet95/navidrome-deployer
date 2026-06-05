@@ -1,3 +1,4 @@
+{{ if .Values.publiclyExposed }}
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
@@ -28,3 +29,4 @@ spec:
   rateLimit:
     average: 50
     burst: 200
+{{ end }}

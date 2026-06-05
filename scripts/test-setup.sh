@@ -23,5 +23,6 @@ fi
 sudo curl -sfL https://get.k3s.io | sh -s - server \
     --disable-cloud-controller \
     --disable=servicelb \
+    --disable=metrics-server \
     --etcd-disable-snapshots
 sudo chmod 644 /etc/rancher/k3s/k3s.yaml
