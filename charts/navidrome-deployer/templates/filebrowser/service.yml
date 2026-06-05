@@ -13,6 +13,9 @@ spec:
   ports:
     - port: {{ .Values.filebrowser.service.port }}
       targetPort: {{ .Values.filebrowser.containerPort }}
+      {{ if eq .Values.filebrowser.service.type "NodePort" }}
+      nodePort: {{ .Values.filebrowser.service.port }}
+      {{ end }}
       protocol: TCP
       name: http
   selector:
