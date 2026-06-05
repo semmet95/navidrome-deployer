@@ -7,6 +7,9 @@ metadata:
     {{- include "commonLabels" . | nindent 4 }}
     {{- include "appLabels" . | nindent 4 }}
 spec:
+  {{ if .Values.filebrowser.service.type }}
+  type: {{ .Values.filebrowser.service.type }}
+  {{ end }}
   ports:
     - port: {{ .Values.filebrowser.service.port }}
       targetPort: {{ .Values.filebrowser.containerPort }}
