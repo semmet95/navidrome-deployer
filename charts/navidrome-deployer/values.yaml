@@ -13,9 +13,10 @@ resources:
 
 # Service configuration
 service:
-  type: LoadBalancer
   port: 80
 
+# use public endpoints configuration only if the following is true
+publiclyExposed: true
 # Public endpoints configuration
 baseDomain: "example.com"
 clusterissuer:

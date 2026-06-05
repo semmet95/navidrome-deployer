@@ -4,6 +4,7 @@ set -ex
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 source "$SCRIPT_DIR/test-setup.sh"
+export KUBECONFIG='/etc/rancher/k3s/k3s.yaml'
 source "$SCRIPT_DIR/longhorn-preflight.sh"
 
 # build the filebrowser-reconfig image
